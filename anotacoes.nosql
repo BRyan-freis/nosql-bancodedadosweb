@@ -1,0 +1,279 @@
+## Mongo Database
+
+O MongoDB consiste num banco de dados baseado em documentos projetado para ajudar
+
+Cada registro feito no banco corresponde a um documento
+
+### Mongosh
+
+O mongosh consiste numa interface de linha de comando — NodeJS — utilizada para interagir com banco de dados Mongo
+
+Usamos o mongosh para testar queries e interagir com os dados de um banco de dados Mongo
+
+*"Para fins de compatibilidade entre diferentes sistemas operacionais, recomenda-se o uso de aspas duplas nos parâmetros com valor suportados"*
+
+#### Comandos
+
+Iniciando Mongo
+
+- Verifica se o Mongo foi instalado corretamente no sistema
+
+```bash
+mongod --version
+```
+
+- Verifica se a interface de linha de comando do Mongo foi instalada no sistema
+
+```bash
+mongosh --version
+```
+
+- Inicializa o terminal de comando do Mongo
+
+```bash
+mongosh
+```
+
+Criando Database
+
+- Se o banco existir, o comando muda para o banco existente, do contra cria um novo
+
+```js
+use <DatabaseName>
+```
+
+Exibindo Bancos
+
+- Exibe todos os bancos existentes
+
+```js
+show dbs
+```
+
+- Exibe o banco que se encontra sendo usado no momento
+
+```js
+db
+```
+
+Monitorando Banco
+
+```bash
+mongostat
+```
+
+Backup do Banco
+
+- Realiza o backup do banco de dados e de todas as collections
+
+```bash
+mongodump --db <DatabaseName> --out <RecordingPath>
+```
+
+Restore do Banco
+
+```bash
+mongorestore <FolderName>
+```
+
+Deletando Banco
+
+- Deleta o banco de dados ativo no momento
+
+```js
+db.dropDatabase();
+```
+
+- Deleta todos os bancos de dados existentes, preservando os bancos originais do sistema
+
+```js
+db.getMongo().getDBNames().forEach(function(dbName) {
+    if (!['admin', 'config', 'local'].includes(dbName)) {
+        db.getSiblingDB(dbName).dropDatabase();
+    }
+});
+```
+
+Gerenciando Usuários
+
+- Cria um novo utilizador
+
+```js
+db.createUser({
+    user: "<Name>",
+    pwd: "<Password>",
+    roles: [
+        { role: "<Role>", db: "<DatabaseName>" }
+    ]
+});
+```
+
+- Exibe todos os utilizadores existentes no banco onde o comando foi executado
+
+```js
+db.getUsers();
+```
+
+- Deleta o utilizador especificado
+
+```js
+db.dropUser("<Name>");
+```
+
+Criando Collection
+
+- Cria explicitamente uma collection com parâmetros customizados
+
+```js
+db.createCollection("<Name>", <Options>);
+```
+
+- Cria uma collection e insere um novo dado
+
+```js
+db.<CollectionName>.insertOne(
+    { key: value }
+);
+```
+
+- Cria uma collection e insere um conjunto de dados dentro dela
+
+```js
+db.<CollectionName>.insertMany([
+    { key: value }
+]);
+```
+
+Exibindo Collections
+
+- Exibe todas as collections existentes dentro do banco ativo
+
+```js
+show collections
+```
+
+- Exibe a quantidade de documentos dentro da collection especificada
+
+```js
+db.<CollectionName>.countDocuments();
+```
+
+Deletando Collections
+
+- Deleta a collection especificada, incluindo os dados armazenados nela
+
+```js
+db.<CollectionName>.drop();
+```
+
+Encontrando Dados
+
+- Retorna o primeiro dado de uma collection
+
+```js
+db.<CollectionName>.findOne();
+```
+
+- Retorna todos os dados de uma collection
+
+```js
+db.<CollectionName>.find();
+```
+
+- Retorna o dado especificado
+
+```js
+db.<CollectionName>.find(
+    { key: value }
+);
+```
+
+- Retorna todos os dados de uma collection na ordem especificada
+
+```js
+db.<CollectionName>.find().sort(
+    { key: value }
+);
+```
+
+- Retorna todos os dados maiores que o valor especificado na chave
+
+```js
+db.<CollectionName>.find(
+    {
+        key: { $gt: value }
+    }
+);
+```
+
+- Retorna todos os dados menores que o valor especificado na chave
+
+```js
+db.<CollectionName>.find(
+    {
+        key: { $lt: value }
+    }
+);
+```
+
+Atualizando Dados
+
+- Atualiza o dado especificado
+
+```js
+db.<CollectionName>.updateOne(
+    { pk: value }, { $set: { key: value } }
+);
+```
+
+- Atualiza mais de um dado de uma vez
+
+```js
+db.<CollectionName>.updateMany(
+    { key: value }, { $set: { key: value } }
+);
+```
+
+- Substitui todos os dados especificados por um novo conjunto de dados
+
+```js
+db.<CollectionName>.replaceOne(
+    { pk: value }, { key: value }
+);
+```
+
+Deletando Dados
+
+- Deleta um documento que atenda ao filtro especificado, geralmente o primeiro que encontrar
+
+```js
+db.<CollectionName>.deleteOne(
+    { key: value }
+);
+```
+
+- Deleta todos os documentos que atendam ao filtro especificado
+
+```js
+db.<CollectionName>.deleteMany(
+    { key: value }
+);
+```
+
+Importando Dados
+
+- Importa um conjunto de dados que se encontra armazenados no formato JSON
+
+```bash
+mongoimport --db <DatabaseName> --collection <CollectionName> --file <FileName> --jsonArray
+```
+
+Exportando Dados
+
+- Exporta um conjunto de dados armazenados em um banco Mongo no local especificado
+
+```bash
+mongoexport --uri <ConnectionString> --db <DatabaseName> --collection <CollectionName> --out <FileName>
+```
+
+*Devemos nos lembrar de omitir a senha na URI para evitar expô-la no histórico do terminal* 
